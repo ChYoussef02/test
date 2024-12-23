@@ -17,14 +17,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  // Accessing the internal routes via Express (default HTTP adapter)
-  const routes = app.getHttpServer()
-    ._router.stack
-    .filter((r) => r.route)
-    .map((r) => `${r.route.stack[0].method.toUpperCase()} ${r.route.path}`);
-
-  Logger.log(`Available Routes:\n${routes.join('\n')}`);
-
   await app.listen(3000);
 }
 bootstrap();

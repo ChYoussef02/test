@@ -11,16 +11,27 @@ export class TaskService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  findAll(): Promise<Task[]> {
-    return this.taskRepository.find();
+  async findAll(): Promise<{tasks: Task[], success: boolean, message: string|null}> {
+    try {
+      const tasks = await this.taskRepository.find();
+      return { tasks, success: true, message: null };
+    } catch(err) {
+      return { tasks: [], success: false, message: err.message };
+    }
+    
   }
 
   findOne(id: number): Promise<Task> {
     return this.taskRepository.findOne({ where: { id } });
   }
 
-  create(task: Partial<Task>): Promise<Task> {
-    return this.taskRepository.save(task);
+  async create(input: Partial<Task>): Promise<{task: Task, success: boolean, message: string|null}> {
+    try {
+      const task = await this.taskRepository.save(input);
+      return { task, success: true, message: 'task created successffully !' }
+    } catch (err) {
+      return { task: null, success: false, message: err.message }
+    }
   }
 
   async update(id: number, task: Partial<Task>): Promise<Task> {

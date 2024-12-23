@@ -1,34 +1,34 @@
 // tasks/task.controller.ts
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, Patch } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Task } from './task.entity';
 
-@Controller('/')
+@Controller("tasks")
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get()
-  findAll(): Promise<Task[]> {
-    return this.taskService.findAll();
+  // TODO: add pagination (query params => page, limit)
+  async findAll() {
+    return await this.taskService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number): Promise<Task> {
+  @Get('id/:id')
+  findOne(@Param('id') id: number) {
     return this.taskService.findOne(id);
   }
 
   @Post()
-  create(@Body() task: Partial<Task>): Promise<Task> {
-    console.log("task received")
-    return this.taskService.create(task);
+  async create(@Body() task: Partial<Task>) {
+    return await this.taskService.create(task);
   }
 
-  @Put(':id')
+  @Patch('id/:id')
   update(@Param('id') id: number, @Body() task: Partial<Task>): Promise<Task> {
     return this.taskService.update(id, task);
   }
 
-  @Delete(':id')
+  @Delete('id/:id')
   delete(@Param('id') id: number): Promise<void> {
     return this.taskService.delete(id);
   }

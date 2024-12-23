@@ -15,7 +15,8 @@ export default function Home() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:3000');
+      // TODO: use ky instead axios
+      const response = await axios.get('http://localhost:3000/tasks');
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -25,7 +26,7 @@ export default function Home() {
   const addTask = async () => {
     if (newTask.title && newTask.description) {
       try {
-        await axios.post('http://localhost:3000', newTask);
+        await axios.post('http://localhost:3000/tasks', newTask);
         console.log("task sent from frontend")
         setNewTask({ title: '', description: '' });
         fetchTasks();
@@ -37,7 +38,7 @@ export default function Home() {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/${id}`);
+      await axios.delete(`http://localhost:3000/tasks/${id}`);
       fetchTasks();
     } catch (error) {
       console.error('Error deleting task:', error);
