@@ -15,30 +15,32 @@ export default function Home() {
 
   const fetchTasks = async () => {
     try {
-      // TODO: use ky instead axios
       const response = await axios.get('http://localhost:3000/tasks');
-      setTasks(response.data);
+      console.log('Fetched tasks:', response.data); // Debugging
+      setTasks(response.data.tasks); // Access the tasks array
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
   };
 
+
   const addTask = async () => {
     if (newTask.title && newTask.description) {
       try {
         await axios.post('http://localhost:3000/tasks', newTask);
-        console.log("task sent from frontend")
+        console.log("Task added:", newTask); // Debugging
         setNewTask({ title: '', description: '' });
-        fetchTasks();
+        fetchTasks(); // Refresh task list
       } catch (error) {
         console.error('Error adding task:', error);
       }
     }
   };
 
+
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/tasks/${id}`);
+      await axios.delete(`http://localhost:3000/tasks/id/${id}`);
       fetchTasks();
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -47,7 +49,7 @@ export default function Home() {
 
   const modifyTask = async (id, updatedTask) => {
     try {
-      await axios.put(`http://localhost:3000/${id}`, updatedTask);
+      await axios.patch(`http://localhost:3000/tasks/id/${id}`, updatedTask);
       fetchTasks();
     } catch (error) {
       console.error('Error modifying task:', error);
@@ -104,22 +106,30 @@ export default function Home() {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="bg-gray-800 p-4 rounded-lg">
-                      <Input
-                        className="bg-gray-700 text-white p-2 mb-2 rounded-lg"
-                        placeholder="Title"
-                        value={editingTask?.id === task.id ? editingTask.title : task.title}
-                        onChange={(e) =>
-                          setEditingTask({ ...task, title: e.target.value })
-                        }
-                      />
-                      <Input
-                        className="bg-gray-700 text-white p-2 mb-2 rounded-lg"
-                        placeholder="Description"
-                        value={editingTask?.id === task.id ? editingTask.description : task.description}
-                        onChange={(e) =>
-                          setEditingTask({ ...task, description: e.target.value })
-                        }
-                      />
+                    <Input
+  className="bg-gray-700 text-white p-2 mb-2 rounded-lg"
+  placeholder="Title"
+  value={editingTask?.id === task.id ? editingTask.title : task.title}
+  onChange={(e) =>
+    setEditingTask((prev) => ({
+      ...prev,
+      id: task.id,
+      title: e.target.value,
+    }))
+  }
+/>
+<Input
+  className="bg-gray-700 text-white p-2 mb-2 rounded-lg"
+  placeholder="Description"
+  value={editingTask?.id === task.id ? editingTask.description : task.description}
+  onChange={(e) =>
+    setEditingTask((prev) => ({
+      ...prev,
+      id: task.id,
+      description: e.target.value,
+    }))
+  }
+/>
                       <Button
                         className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                         onClick={() => {
