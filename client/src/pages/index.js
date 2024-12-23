@@ -2,10 +2,12 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
 export default function Home() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: '', description: '' });
+  const [editingTask, setEditingTask] = useState(null);
 
   useEffect(() => {
     fetchTasks();
@@ -42,56 +44,106 @@ export default function Home() {
     }
   };
 
+  const modifyTask = async (id, updatedTask) => {
+    try {
+      await axios.put(`http://localhost:3000/${id}`, updatedTask);
+      fetchTasks();
+    } catch (error) {
+      console.error('Error modifying task:', error);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold">Task Management</h1>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="container mx-auto p-4">
+        <h1 className="text-4xl font-bold mb-6">Task Management</h1>
 
-      <div className="mt-4">
-        <Input
-          className="border p-2 mr-2"
-          placeholder="Title"
-          value={newTask.title}
-          onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-        />
-        <Input
-          className="border p-2 mr-2"
-          placeholder="Description"
-          value={newTask.description}
-          onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-        />
-        <Button
-          className="text-white px-4 py-2"
-          variant="ghost"
-          onClick={addTask}
-        >
-          Add Task
-        </Button>
-      </div>
-
-      <ul className="mt-6">
-        {Array.isArray(tasks) ? (
-          tasks.map((task) => (
-            <li
-              key={task.id}
-              className="border p-4 flex justify-between items-center"
+        <div className="bg-gray-800 p-6 rounded-lg mb-6">
+          <h2 className="text-2xl mb-4">Add New Task</h2>
+          <div className="flex flex-col md:flex-row gap-4">
+            <Input
+              className="bg-gray-700 text-white p-2 rounded-lg"
+              placeholder="Title"
+              value={newTask.title}
+              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+            />
+            <Input
+              className="bg-gray-700 text-white p-2 rounded-lg"
+              placeholder="Description"
+              value={newTask.description}
+              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+            />
+            <Button
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+              onClick={addTask}
             >
-              <div>
-                <h2 className="font-bold">{task.title}</h2>
-                <p>{task.description}</p>
-              </div>
-              <Button
-                className="text-white px-4 py-2"
-                variant="destructive"
-                onClick={() => deleteTask(task.id)}
+              Add Task
+            </Button>
+          </div>
+        </div>
+
+        <ul className="space-y-4">
+          {Array.isArray(tasks) ? (
+            tasks.map((task) => (
+              <li
+                key={task.id}
+                className="bg-gray-800 p-6 rounded-lg flex justify-between items-center"
               >
-                Delete
-              </Button>
-            </li>
-          ))
-        ) : (
-          <p>No tasks available</p>
-        )}
-      </ul>
+                <div>
+                  <h2 className="font-bold text-xl">{task.title}</h2>
+                  <p className="text-gray-400">{task.description}</p>
+                </div>
+                <div className="flex gap-4">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"
+                      >
+                        Modify
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="bg-gray-800 p-4 rounded-lg">
+                      <Input
+                        className="bg-gray-700 text-white p-2 mb-2 rounded-lg"
+                        placeholder="Title"
+                        value={editingTask?.id === task.id ? editingTask.title : task.title}
+                        onChange={(e) =>
+                          setEditingTask({ ...task, title: e.target.value })
+                        }
+                      />
+                      <Input
+                        className="bg-gray-700 text-white p-2 mb-2 rounded-lg"
+                        placeholder="Description"
+                        value={editingTask?.id === task.id ? editingTask.description : task.description}
+                        onChange={(e) =>
+                          setEditingTask({ ...task, description: e.target.value })
+                        }
+                      />
+                      <Button
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+                        onClick={() => {
+                          modifyTask(task.id, editingTask || task);
+                          setEditingTask(null);
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </PopoverContent>
+                  </Popover>
+                  <Button
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                    onClick={() => deleteTask(task.id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p>No tasks available</p>
+          )}
+        </ul>
+      </div>
     </div>
   );
 }
