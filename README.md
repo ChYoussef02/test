@@ -1,5 +1,5 @@
 # A CRUD web application to manage tasks  .
-features :
+Features :
 - CRUD operations for tasks
 - Swagger documentation for the backend
 - Unit tests for core functionalities
