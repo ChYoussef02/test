@@ -16,7 +16,7 @@ export default function Home() {
   const fetchTasks = async () => {
     try {
       const response = await axios.get('http://localhost:3000/tasks');
-      console.log('Fetched tasks:', response.data); // Debugging
+      console.log('Fetched tasks:', response.data);
       setTasks(response.data.tasks); // Access the tasks array
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -28,9 +28,9 @@ export default function Home() {
     if (newTask.title && newTask.description) {
       try {
         await axios.post('http://localhost:3000/tasks', newTask);
-        console.log("Task added:", newTask); // Debugging
+        console.log("Task added:", newTask);
         setNewTask({ title: '', description: '' });
-        fetchTasks(); // Refresh task list
+        fetchTasks();
       } catch (error) {
         console.error('Error adding task:', error);
       }
