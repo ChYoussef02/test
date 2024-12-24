@@ -10,31 +10,31 @@ nextjs : shadcn / tailwindcss
 
 Create an `.env` file in the `server` directory with the following content:
 
-DB_HOST=localhost
-DB_PORT=5050
-DB_USERNAME=postgres
-DB_PASSWORD=user
-DB_NAME=tasks
+DB_HOST=localhost <br>
+DB_PORT=5050 <br>
+DB_USERNAME=postgres <br>
+DB_PASSWORD=user <br>
+DB_NAME=tasks <br>
 BACKEND_PORT=4000
 
 
 # how to run the project :
-Open your terminal and clone the repository:
+Open your terminal and clone the repository: <br>
 git clone https://github.com/ChYoussef02/test.git
 
--- Navigate to the project directory:
-# Run the backend :
-cd server
-docker-compose up
-npm i
-npm start  (make sure the docker container of the server is running )
+# Navigate to the project directory:
+-- Run the backend : <br>
+cd server <br>
+docker-compose up <br>
+npm i <br>
+npm start  (make sure the docker container of the server is running ) <br>
 
-# Run the frontend :
-cd client
-npm i
-npm run dev
+-- Run the frontend : <br>
+cd client <br>
+npm i <br>
+npm run dev <br>
 
 
 # for unit tests :
-cd server
+cd server <br>
 npm test
