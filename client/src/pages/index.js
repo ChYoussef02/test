@@ -15,7 +15,7 @@ export default function Home() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/tasks');
+      const response = await axios.get('http://localhost:4000/tasks');
       console.log('Fetched tasks:', response.data);
       setTasks(response.data.tasks); // Access the tasks array
     } catch (error) {
@@ -27,7 +27,7 @@ export default function Home() {
   const addTask = async () => {
     if (newTask.title && newTask.description) {
       try {
-        await axios.post('http://localhost:3000/tasks', newTask);
+        await axios.post('http://localhost:4000/tasks', newTask);
         console.log("Task added:", newTask);
         setNewTask({ title: '', description: '' });
         fetchTasks();
@@ -40,7 +40,7 @@ export default function Home() {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/tasks/id/${id}`);
+      await axios.delete(`http://localhost:4000/tasks/id/${id}`);
       fetchTasks();
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -49,7 +49,7 @@ export default function Home() {
 
   const modifyTask = async (id, updatedTask) => {
     try {
-      await axios.patch(`http://localhost:3000/tasks/id/${id}`, updatedTask);
+      await axios.patch(`http://localhost:4000/tasks/id/${id}`, updatedTask);
       fetchTasks();
     } catch (error) {
       console.error('Error modifying task:', error);

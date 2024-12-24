@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Delete, Param, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, Patch, Query } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { Task } from './task.entity';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('tasks')
 @Controller("tasks")
@@ -11,9 +11,11 @@ export class TaskController {
   @Get()
   @ApiOperation({ summary: 'Get all tasks' })
   @ApiResponse({ status: 200, description: 'Tasks retrieved successfully.' })
-  // TODO: add pagination (query params => page, limit)
-  async findAll() {
-    return await this.taskService.findAll();
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
+    const paginationLimit = Math.min(limit, 100);
+    return await this.taskService.findAll(page, paginationLimit);
   }
 
 

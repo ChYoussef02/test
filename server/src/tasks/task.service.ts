@@ -10,15 +10,22 @@ export class TaskService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  async findAll(): Promise<{tasks: Task[], success: boolean, message: string|null}> {
+  async findAll(
+    page : number,
+    limit :number
+  ): Promise<{ tasks: Task[]; success: boolean; message: string | null; total: number }> {
     try {
-      const tasks = await this.taskRepository.find();
-      return { tasks, success: true, message: null };
-    } catch(err) {
-      return { tasks: [], success: false, message: err.message };
+      const paginationLimit = Math.min(limit, 100); // Restrict maximum limit to 100
+      const [tasks, total] = await this.taskRepository.findAndCount({
+        skip: (page - 1) * paginationLimit,
+        take: paginationLimit,
+      });
+      return { tasks, success: true, message: null, total };
+    } catch (err) {
+      return { tasks: [], success: false, message: err.message, total: 0 };
     }
-
   }
+
 
   findOne(id: number): Promise<Task> {
     return this.taskRepository.findOne({ where: { id } });

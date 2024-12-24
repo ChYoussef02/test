@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TaskModule } from './tasks/task.model';  // Import TaskModule here
+import { TaskModule } from './tasks/task.model';
 import { TasksService } from './tasks/tasks.service';
 import * as dotenv from "dotenv";
 dotenv.config();
